@@ -1,5 +1,14 @@
 FROM ubuntu:20.04
-RUN apt-get update && apt-get install -y wget libc6 libgcc1 libgssapi-krb5-2 libicu66 libssl1.1 libstdc++6 zlib1g ca-certificates
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y wget libc6 libgcc1 libgssapi-krb5-2 libicu66 libssl1.1 libstdc++6 zlib1g ca-certificates lsb-core lldb ubuntu-dbgsym-keyring
+
+RUN echo "deb http://ddebs.ubuntu.com $(lsb_release -cs) main restricted universe multiverse" | tee -a /etc/apt/sources.list.d/ddebs.list
+RUN echo "deb http://ddebs.ubuntu.com $(lsb_release -cs)-updates main restricted universe multiverse" | tee -a /etc/apt/sources.list.d/ddebs.list
+RUN echo "deb http://ddebs.ubuntu.com $(lsb_release -cs)-proposed main restricted universe multiverse" | tee -a /etc/apt/sources.list.d/ddebs.list
+
+# Install some debugging symbols for openssl.
+RUN apt-get update && apt-get install -y libssl-dev libssl1.1-dbgsym
+
 RUN mkdir /app && mkdir /dotnet && mkdir /usr/local/dotnet
 WORKDIR /dotnet
 RUN wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh -O dotnet-install.sh && \
@@ -24,7 +33,7 @@ RUN openssl x509 -req -days 365 -in leaf.csr -CA root.cer -CAkey root.key -set_s
 # Install the root.
 RUN cp root.cer /usr/local/share/ca-certificates/our-root.crt && update-ca-certificates
 
-# Get rid of the stuff we aren't using. 
+# Get rid of the stuff we aren't using.
 RUN rm leaf.csr root.key root.cer openssl.cnf
 
 # Bundle it all up in to a PKCS12
