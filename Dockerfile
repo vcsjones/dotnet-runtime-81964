@@ -24,7 +24,7 @@ RUN openssl x509 -req -days 365 -in leaf.csr -CA root.cer -CAkey root.key -set_s
 # Install the root.
 RUN cp root.cer /usr/local/share/ca-certificates/our-root.crt && update-ca-certificates
 
-# Get rid of the stuff we aren't using. Since this is a partial chain scenario, get rid of the root.
+# Get rid of the stuff we aren't using. 
 RUN rm leaf.csr root.key root.cer openssl.cnf
 
 # Bundle it all up in to a PKCS12
