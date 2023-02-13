@@ -1,13 +1,13 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y wget libc6 libgcc1 libgssapi-krb5-2 libicu66 libssl1.1 libstdc++6 zlib1g ca-certificates lsb-core lldb ubuntu-dbgsym-keyring
+RUN apt-get update && apt-get install -y wget libc6 libgcc1 libgssapi-krb5-2 libicu70 libssl3 libstdc++6 zlib1g ca-certificates lsb-core lldb ubuntu-dbgsym-keyring
 
 RUN echo "deb http://ddebs.ubuntu.com $(lsb_release -cs) main restricted universe multiverse" | tee -a /etc/apt/sources.list.d/ddebs.list
 RUN echo "deb http://ddebs.ubuntu.com $(lsb_release -cs)-updates main restricted universe multiverse" | tee -a /etc/apt/sources.list.d/ddebs.list
 RUN echo "deb http://ddebs.ubuntu.com $(lsb_release -cs)-proposed main restricted universe multiverse" | tee -a /etc/apt/sources.list.d/ddebs.list
 
 # Install some debugging symbols for openssl.
-RUN apt-get update && apt-get install -y libssl-dev libssl1.1-dbgsym
+RUN apt-get update && apt-get install -y libssl-dev libssl3-dbgsym
 
 RUN mkdir /app && mkdir /dotnet && mkdir /usr/local/dotnet
 WORKDIR /dotnet
