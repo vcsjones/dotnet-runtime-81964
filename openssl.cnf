@@ -1,0 +1,2 @@
+[ usr_cert ]
+authorityInfoAccess=OCSP;URI:http://ocsp.vcsjones.dev
